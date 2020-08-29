@@ -2,6 +2,7 @@ package pl.sda.jdbc;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,20 +14,35 @@ final class AppConnectionManager {
         Properties properties = loadDatabaseProperties();
         ConnectionManager manager = new MySqlConnectionManager(properties);
 
+        Employee employee = getEmployee(manager, "2");
+        System.out.println(employee);
+    }
+
+    private static Employee getEmployee(ConnectionManager manager, String id) {
         try (Connection conn = manager.getConnection()) {
             System.out.println("connected!");
 
-            final Statement stmt = conn.createStatement();
-            stmt.execute("select lastName, firstName from employees");
+            final PreparedStatement stmt = conn.prepareStatement(
+                "select employeeNumber, lastName, firstName "
+                + "from employees where employeeNumber = ?");
+
+            stmt.setString(1, id);
+            stmt.execute();
+
+//            stmt.execute("select employeeNumber, lastName, firstName "
+//                + "from employees where employeeNumber = " + id);
 
             ResultSet rs = stmt.getResultSet();
             while (rs.next()) {
-                System.out.println(rs.getString("lastName") + ", " + rs.getString("firstName"));
+                return new Employee(
+                    rs.getString("employeeNumber"),
+                    rs.getString("firstName"),
+                    rs.getString("lastName"));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private static Properties loadDatabaseProperties() throws IOException {
