@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import java.util.concurrent.ThreadLocalRandom;
 
 final class AppConnectionManager {
 
@@ -14,9 +15,16 @@ final class AppConnectionManager {
         Properties properties = loadDatabaseProperties();
         ConnectionManager manager = new MySqlConnectionManager(properties);
 
-        boolean inserted = insertEmployee(manager, new Employee("99", "Jan", "Kowalski", "ext", "jk@wp.pl", "1", "dev"));
+        final int id = ThreadLocalRandom.current().nextInt(10000, 99999999);
+        boolean inserted = insertEmployee(manager, new Employee(id, "Jan", "Kowalski", "ext", "jk@wp.pl", "1", "dev"));
         if (inserted) {
-            Employee employee = getEmployee(manager, "99");
+            Employee employee = getEmployee(manager, id);
+            System.out.println(employee);
+        }
+
+        final boolean updated = updateEmployeeName(manager, id, "Adam", "Nowak");
+        if (updated) {
+            Employee employee = getEmployee(manager, id);
             System.out.println(employee);
         }
     }
@@ -29,7 +37,7 @@ final class AppConnectionManager {
                     + "`email`,`officeCode`,`jobTitle`) values \n"
                     + "(?, ?, ?, ?, ?, ?, ?)");
 
-            stmt.setString(1, employee.getId());
+            stmt.setInt(1, employee.getId());
             stmt.setString(2, employee.getLastName());
             stmt.setString(3, employee.getFirstName());
             stmt.setString(4, employee.getExtension());
@@ -45,7 +53,7 @@ final class AppConnectionManager {
         return false;
     }
 
-    private static Employee getEmployee(ConnectionManager manager, String id) {
+    private static Employee getEmployee(ConnectionManager manager, int id) {
         try (Connection conn = manager.getConnection()) {
             System.out.println("connected!");
 
@@ -53,7 +61,7 @@ final class AppConnectionManager {
                 "select employeeNumber, lastName, firstName "
                 + "from employees where employeeNumber = ?");
 
-            stmt.setString(1, id);
+            stmt.setInt(1, id);
             stmt.execute();
 
 //            stmt.execute("select employeeNumber, lastName, firstName "
@@ -62,7 +70,7 @@ final class AppConnectionManager {
             ResultSet rs = stmt.getResultSet();
             while (rs.next()) {
                 return new Employee(
-                    rs.getString("employeeNumber"),
+                    rs.getInt("employeeNumber"),
                     rs.getString("firstName"),
                     rs.getString("lastName"));
             }
@@ -70,6 +78,24 @@ final class AppConnectionManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static boolean updateEmployeeName(ConnectionManager manager, int id, String firstName, String lastName) {
+        try (Connection conn = manager.getConnection()) {
+
+            PreparedStatement stmt = conn.prepareStatement(
+                "update employees set firstName = ?, lastName = ? where employeeNumber = ?");
+
+            stmt.setString(1, firstName);
+            stmt.setString(2, lastName);
+            stmt.setInt(3, id);
+
+            final int updated = stmt.executeUpdate();
+            return updated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private static Properties loadDatabaseProperties() throws IOException {

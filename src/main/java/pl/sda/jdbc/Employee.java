@@ -2,7 +2,7 @@ package pl.sda.jdbc;
 
 public final class Employee {
 
-    private String id;
+    private int id;
     private String firstName;
     private String lastName;
     private String extension;
@@ -10,13 +10,13 @@ public final class Employee {
     private String officeCode;
     private String jobTitle;
 
-    Employee(String id, String firstName, String lastName) {
+    Employee(int id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public Employee(String id, String firstName, String lastName, String extension, String email,
+    public Employee(int id, String firstName, String lastName, String extension, String email,
         String officeCode, String jobTitle) {
         this.id = id;
         this.firstName = firstName;
@@ -27,7 +27,7 @@ public final class Employee {
         this.jobTitle = jobTitle;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
