@@ -14,11 +14,14 @@ final class AppConnectionManager {
         Properties properties = loadDatabaseProperties();
         ConnectionManager manager = new MySqlConnectionManager(properties);
 
-        Employee employee = getEmployee(manager, "2");
-        System.out.println(employee);
+        boolean inserted = insertEmployee(manager, new Employee("99", "Jan", "Kowalski", "ext", "jk@wp.pl", "1", "dev"));
+        if (inserted) {
+            Employee employee = getEmployee(manager, "99");
+            System.out.println(employee);
+        }
     }
 
-    private static void insertEmployee(ConnectionManager manager, Employee employee) {
+    private static boolean insertEmployee(ConnectionManager manager, Employee employee) {
         try (Connection connection = manager.getConnection()) {
 
             PreparedStatement stmt = connection.prepareStatement(
@@ -35,10 +38,11 @@ final class AppConnectionManager {
             stmt.setString(7, employee.getJobTitle());
 
             final int inserted = stmt.executeUpdate();
-
+            return inserted > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     private static Employee getEmployee(ConnectionManager manager, String id) {
