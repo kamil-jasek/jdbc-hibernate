@@ -5,11 +5,26 @@ public final class Employee {
     private String id;
     private String firstName;
     private String lastName;
+    private String extension;
+    private String email;
+    private String officeCode;
+    private String jobTitle;
 
     Employee(String id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Employee(String id, String firstName, String lastName, String extension, String email,
+        String officeCode, String jobTitle) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.extension = extension;
+        this.email = email;
+        this.officeCode = officeCode;
+        this.jobTitle = jobTitle;
     }
 
     public String getId() {
@@ -22,6 +37,22 @@ public final class Employee {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
     }
 
     @Override

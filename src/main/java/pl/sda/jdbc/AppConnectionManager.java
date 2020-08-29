@@ -18,6 +18,29 @@ final class AppConnectionManager {
         System.out.println(employee);
     }
 
+    private static void insertEmployee(ConnectionManager manager, Employee employee) {
+        try (Connection connection = manager.getConnection()) {
+
+            PreparedStatement stmt = connection.prepareStatement(
+                "insert  into employees(`employeeNumber`,`lastName`,`firstName`,`extension`,"
+                    + "`email`,`officeCode`,`jobTitle`) values \n"
+                    + "(?, ?, ?, ?, ?, ?, ?)");
+
+            stmt.setString(1, employee.getId());
+            stmt.setString(2, employee.getLastName());
+            stmt.setString(3, employee.getFirstName());
+            stmt.setString(4, employee.getExtension());
+            stmt.setString(5, employee.getEmail());
+            stmt.setString(6, employee.getOfficeCode());
+            stmt.setString(7, employee.getJobTitle());
+
+            final int inserted = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static Employee getEmployee(ConnectionManager manager, String id) {
         try (Connection conn = manager.getConnection()) {
             System.out.println("connected!");
