@@ -4,9 +4,9 @@ import java.util.Properties;
 import javax.sql.DataSource;
 import org.h2.jdbcx.JdbcConnectionPool;
 
-final class H2PoolDataSource extends ConnectionManager {
+final class H2PoolConnectionManager extends ConnectionManager {
 
-    public H2PoolDataSource(Properties properties) {
+    public H2PoolConnectionManager(Properties properties) {
         super(properties);
     }
 

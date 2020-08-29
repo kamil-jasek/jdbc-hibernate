@@ -9,7 +9,7 @@ final class AppConnectionManager {
 
     public static void main(String[] args) throws IOException {
         Properties properties = loadDatabaseProperties();
-        ConnectionManager manager = new H2PoolDataSource(properties);
+        ConnectionManager manager = new MySqlConnectionManager(properties);
 
         try (Connection conn = manager.getConnection()) {
             System.out.println("connected!");
