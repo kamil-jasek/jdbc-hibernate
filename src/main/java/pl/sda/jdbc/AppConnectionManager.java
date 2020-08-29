@@ -31,6 +31,8 @@ final class AppConnectionManager {
 
     private static boolean insertEmployee(ConnectionManager manager, Employee employee) {
         try (Connection connection = manager.getConnection()) {
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
             PreparedStatement stmt = connection.prepareStatement(
                 "insert  into employees(`employeeNumber`,`lastName`,`firstName`,`extension`,"
@@ -46,6 +48,8 @@ final class AppConnectionManager {
             stmt.setString(7, employee.getJobTitle());
 
             final int inserted = stmt.executeUpdate();
+            connection.commit();
+//            connection.rollback();
             return inserted > 0;
         } catch (SQLException e) {
             e.printStackTrace();
