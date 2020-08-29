@@ -1,6 +1,8 @@
 package pl.sda.jdbc;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
 
 final class AppConnectionManager {
@@ -9,6 +11,11 @@ final class AppConnectionManager {
         Properties properties = loadDatabaseProperties();
         ConnectionManager manager = new H2PoolDataSource(properties);
 
+        try (Connection conn = manager.getConnection()) {
+            System.out.println("connected!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Properties loadDatabaseProperties() throws IOException {
