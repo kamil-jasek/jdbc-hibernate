@@ -3,6 +3,8 @@ package pl.sda.jdbc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.sql.DataSource;
+import org.h2.jdbcx.JdbcConnectionPool;
 
 public class JdbcApp {
 
@@ -35,6 +37,11 @@ public class JdbcApp {
 
 
         // new way DataSource
-
+        DataSource dataSource = JdbcConnectionPool.create("jdbc:h2:mem:test", "sa", "sa");
+        try (Connection conn = dataSource.getConnection()) {
+            System.out.println("connected via datasource");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
