@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import pl.sda.hibernate.entity.Item;
 
 public final class HibernateUtil {
 
@@ -15,6 +16,7 @@ public final class HibernateUtil {
         try {
             Configuration configuration = new Configuration();
             configuration.setProperties(loadHibernateProperties());
+            registerEntities(configuration);
 
             StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -25,6 +27,10 @@ public final class HibernateUtil {
             ex.printStackTrace();
             throw new IllegalStateException(ex.getMessage(), ex);
         }
+    }
+
+    private static void registerEntities(Configuration configuration) {
+        configuration.addAnnotatedClass(Item.class);
     }
 
     private static Properties loadHibernateProperties() throws IOException {
