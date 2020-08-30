@@ -22,6 +22,9 @@ public final class Item {
 
     private int quantity;
 
+    // Only for Hibernate
+    private Item() {}
+
     public Item(String name, BigDecimal price, int quantity) {
         this.name = name;
         this.price = price;
@@ -49,20 +52,22 @@ public final class Item {
             return false;
         }
         Item item = (Item) o;
-        return quantity == item.quantity &&
+        return id == item.id &&
+            quantity == item.quantity &&
             name.equals(item.name) &&
             price.equals(item.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, price, quantity);
+        return Objects.hash(id, name, price, quantity);
     }
 
     @Override
     public String toString() {
         return "Item{" +
-            "name='" + name + '\'' +
+            "id=" + id +
+            ", name='" + name + '\'' +
             ", price=" + price +
             ", quantity=" + quantity +
             '}';
