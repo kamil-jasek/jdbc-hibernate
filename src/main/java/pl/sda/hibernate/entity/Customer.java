@@ -45,9 +45,7 @@ public abstract class Customer {
     }
 
     public void addOrder(Order order) {
-        if (!orders.contains(order)) {
-            orders.add(order);
-        }
+        orders.add(order);
     }
 
     public List<Order> getOrders() {

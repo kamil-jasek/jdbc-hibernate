@@ -19,11 +19,10 @@ import javax.persistence.Table;
 @Table(name = "customer_orders")
 public final class Order {
 
-
-
     public enum Status {
         IN_PROGRESS, SENT, DELIVERED;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
