@@ -6,8 +6,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import pl.sda.hibernate.entity.Company;
+import pl.sda.hibernate.entity.Customer;
 import pl.sda.hibernate.entity.Item;
 import pl.sda.hibernate.entity.Order;
+import pl.sda.hibernate.entity.Person;
 
 public final class HibernateUtil {
 
@@ -33,6 +36,9 @@ public final class HibernateUtil {
     private static void registerEntities(Configuration configuration) {
         configuration.addAnnotatedClass(Order.class);
         configuration.addAnnotatedClass(Item.class);
+        configuration.addAnnotatedClass(Customer.class);
+        configuration.addAnnotatedClass(Person.class);
+        configuration.addAnnotatedClass(Company.class);
     }
 
     private static Properties loadHibernateProperties() throws IOException {
