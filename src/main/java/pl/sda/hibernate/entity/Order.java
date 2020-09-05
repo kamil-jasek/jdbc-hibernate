@@ -19,10 +19,11 @@ import javax.persistence.Table;
 @Table(name = "customer_orders")
 public final class Order {
 
-    public enum Status {
-        IN_PROGRESS, SENT, DELIVERED
-    }
 
+
+    public enum Status {
+        IN_PROGRESS, SENT, DELIVERED;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -45,6 +46,12 @@ public final class Order {
 
     public Status getStatus() {
         return status;
+    }
+
+    public void sendItems() {
+        if (status.equals(Status.IN_PROGRESS)) {
+            status = Status.SENT;
+        }
     }
 
     public List<Item> getItems() {
